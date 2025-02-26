@@ -1,5 +1,7 @@
 BUILD_DIR := build
 
+# Allow the user to specify the compiler and linker on macOS
+# as Apple Clang does not support MIPS architecture
 ifeq ($(shell uname),Darwin)
     CC      ?= clang
     LD      ?= ld.lld
