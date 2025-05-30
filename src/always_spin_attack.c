@@ -7,7 +7,6 @@
 #include "controller.h"
 #include "Reloc.h"
 #include "Camera.h"
-#include "SaveFile.h"
 #include "z64scene.h"
 #include "controller.h"
 #include "z64actor_dlftbls.h"
@@ -17,7 +16,7 @@
 #define z2_PlayerWaitForGiantMask_VRAM   0x80838A20
 #define s801D0B70                        (*(struct_801D0B70*)        0x801D0B70)
 
-extern struct SaveFileConfig SAVE_FILE_CONFIG;
+bool isGiant;
 
 typedef struct {
     /* 0x00 */ PlayerOverlay kaleidoScope; // VRAM: [0x808160A0, 0x8082DA90)
@@ -243,7 +242,7 @@ void GiantMask_Handle(Player* player, PlayState* globalCtx, Input* input) {
                 sGiantsMaskCsTimer = 0;
                 sSubCamAtVel = 0.0f;
                 sSubCamUpRotZScale = 0.0f;
-                f32 playerHeight = Camera_PlayerGetHeight(player);
+                f32 playerHeight = Player_GetHeight(player);
                 if (!GiantMask_IsGiant()) {
                     sGiantsMaskCsState = 1;
                     sSubCamDistZFromPlayer = 60.0f;
@@ -540,11 +539,11 @@ void GiantMask_AdjustSpinAttackHeight(Actor* actor, ColliderCylinder* collider) 
 }
 
 bool GiantMask_IsGiant() {
-    return SAVE_FILE_CONFIG.flags.isGiant;
+    return isGiant;
 }
 
 void GiantMask_SetIsGiant(bool value) {
-    SAVE_FILE_CONFIG.flags.isGiant = value;
+    isGiant = value;
 }
 
 void GiantMask_MarkReset() {
